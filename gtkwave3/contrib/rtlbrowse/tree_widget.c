@@ -9,11 +9,13 @@
 
 #include <config.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include "splay.h"
 
 #if WAVE_USE_GTK2
 #define set_winsize(w,x,y) gtk_window_set_default_size(GTK_WINDOW(w),(x),(y))
 void create_toolbar(GtkWidget *table);
+void focus_find_entry();
 #else
 #define set_winsize(w,x,y) gtk_widget_set_usize(GTK_WIDGET(w),(x),(y))
 #endif
@@ -82,6 +84,8 @@ return(is_active);
 static GtkWidget *window;
 static GtkWidget *tree;
 static GtkSignalFunc cleanup;
+static GtkAccelGroup* accel_group;
+static GClosure* closure;
 
 
 static void destroy_callback(GtkWidget *widget, GtkWidget *nothing)
@@ -216,6 +220,11 @@ void treebox(char *title, GtkSignalFunc func, GtkWidget *old_window)
     gtk_container_add (GTK_CONTAINER (frameh), hbox);
 #else
     create_toolbar(table);
+    // Set up the accelerator group.
+    accel_group = gtk_accel_group_new();
+    closure = g_cclosure_new(focus_find_entry, 0, 0);
+    gtk_accel_group_connect(accel_group, GDK_KEY_f, GDK_CONTROL_MASK, 0, closure);
+    gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
 #endif
 
     gtk_container_add (GTK_CONTAINER (window), table);

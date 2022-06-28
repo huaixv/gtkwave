@@ -532,11 +532,11 @@ find_edit_cb (widget, &ev, data);
 forward_noskip = FALSE;
 }
 
+GtkWidget *find_entry;
 
 void create_toolbar(GtkWidget *table)
     {
     GtkWidget *find_label;
-    GtkWidget *find_entry;
     GtkWidget *tb;
     GtkWidget *stock;
     GtkWidget *hbox;
@@ -593,6 +593,9 @@ void create_toolbar(GtkWidget *table)
     gtk_box_pack_start (GTK_BOX (hbox), matchcase_checkbutton, FALSE, FALSE, 0);
     }
 
+void focus_find_entry() {
+    gtk_widget_grab_focus(find_entry);
+}
 
 
 static char *tmpnam_rtlbrowse(char *s, int *fd)
