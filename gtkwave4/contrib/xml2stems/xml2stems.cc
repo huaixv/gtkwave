@@ -191,6 +191,7 @@ while(!feof(fi))
                                 	std::map <string, string>*xmt = parse_xml_tags(s, NULL);
 					if(xmt)
 						{
+						const char *loc = (*xmt)[string("loc")].c_str();
 						const char *fl = (*xmt)[string("fl")].c_str();
 						const char *nam = (*xmt)[string("name")].c_str();
 						const char *tms = (*xmt)[string("topModule")].c_str();

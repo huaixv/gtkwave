@@ -191,23 +191,36 @@ while(!feof(fi))
                                 	std::map <string, string>*xmt = parse_xml_tags(s, NULL);
 					if(xmt)
 						{
+						const char *loc = (*xmt)[string("loc")].c_str();
 						const char *fl = (*xmt)[string("fl")].c_str();
 						const char *nam = (*xmt)[string("name")].c_str();
 						const char *tms = (*xmt)[string("topModule")].c_str();
 
-						if(fl && nam && tms)
+						if(loc && fl && nam && tms)
 							{
 							int tm = (tms[0] == '1') ? is_verilator_sim : 0;
 
 							mId.push(nam);
 
-							char fl_dup[strlen(fl)+1];
-							const char *s = fl; char *d = fl_dup;
-							while(isalpha(*s)) { *(d++) = *(s++); }
-							*d = 0;
-	
-							unsigned int lineno = atoi(s);
-							const char *mnam = fId[fl_dup].c_str();
+							unsigned int lineno = 0;
+							const char *mnam = NULL;
+
+							if (loc[0] != NULL) {
+								char fl_dup[strlen(loc)+1];
+								const char *s = loc; char *d = fl_dup;
+								while(*s != ',') { *(d++) = *(s++); }
+								*d = 0; s++;
+								lineno = atoi(s);
+								mnam = fId[fl_dup].c_str();
+							} else {
+								char fl_dup[strlen(fl)+1];
+								const char *s = fl; char *d = fl_dup;
+								while(isalpha(*s)) { *(d++) = *(s++); }
+								*d = 0;
+								lineno = atoi(s);
+								mnam = fId[fl_dup].c_str();
+							}
+
 							fprintf(fo, "++ module %s file %s lines %d - %d\n", nam, mnam, lineno, lineno); /* don't need line number it truly ends at */
 							if(tm)
 								{
