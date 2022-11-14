@@ -1857,6 +1857,7 @@ void bwlogbox_2(struct logfile_context_t *ctx, GtkWidget *window, GtkWidget *but
 					else
 					{
 					good_scope = !strcmp(scp_nam, title);
+            || ((!strncmp(scp_nam, "TOP.", 4) || !strncmp(scp_nam, "top.", 4))
 					}
 
 				if(!good_scope)
