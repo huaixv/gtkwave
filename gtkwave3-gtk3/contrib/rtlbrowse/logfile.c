@@ -511,7 +511,14 @@ gboolean find_edit_cb (GtkWidget *widget, GdkEventKey *ev, gpointer *data)
 	search_string = strdup(t);
         }
 
-    search_forward(NULL, NULL);
+      if (ev->state & GDK_SHIFT_MASK)
+        {
+        search_backward(NULL, NULL);
+        }
+      else
+        {
+        search_forward(NULL, NULL);
+        }
     }
   return FALSE;
 }
