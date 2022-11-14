@@ -1230,26 +1230,21 @@ scroll_event( GtkWidget * widget, GdkEventScroll * event, gpointer text)
   gdouble s_val = gtk_adjustment_get_step_increment(vadj);
   gdouble p_val = gtk_adjustment_get_page_increment(vadj);
 
-  switch ( event->direction )
+  if (event->direction == GDK_SCROLL_UP || event->direction == GDK_SCROLL_SMOOTH && event->delta_x == 0.0 && event->delta_y == -1.0)
   {
-    case GDK_SCROLL_UP:
 	gtk_adjustment_set_value(vadj, gtk_adjustment_get_value(vadj) - s_val);
 	if(gtk_adjustment_get_value(vadj) < gtk_adjustment_get_lower(vadj)) gtk_adjustment_set_value(vadj, gtk_adjustment_get_lower(vadj));
 
 	g_signal_emit_by_name (GTK_ADJUSTMENT(vadj), "changed");
         g_signal_emit_by_name (GTK_ADJUSTMENT(vadj), "value_changed");
-
-      break;
-
-    case GDK_SCROLL_DOWN:
+  }
+  else if (event->direction == GDK_SCROLL_DOWN || event->direction == GDK_SCROLL_SMOOTH && event->delta_x == 0.0 && event->delta_y == 1.0)
+  {
 	gtk_adjustment_set_value(vadj, gtk_adjustment_get_value(vadj) + s_val);
 	if(gtk_adjustment_get_value(vadj) > gtk_adjustment_get_upper(vadj) - p_val) gtk_adjustment_set_value(vadj, gtk_adjustment_get_upper(vadj) - p_val);
 
 	g_signal_emit_by_name (GTK_ADJUSTMENT(vadj), "changed");
         g_signal_emit_by_name (GTK_ADJUSTMENT(vadj), "value_changed");
-
-    default:
-      break;
   }
   return(TRUE);
 }
